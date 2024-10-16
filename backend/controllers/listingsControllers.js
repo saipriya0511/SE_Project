@@ -47,3 +47,11 @@ async function addListing(req, res) {
     console.log(error);
   }
 }
+const getAllListings = async (req, res) => {
+  try {
+    const data = await Listings.find();
+    res.send(data);
+  } catch (error) {
+    console.log(error);
+  }
+};

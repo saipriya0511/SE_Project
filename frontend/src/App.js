@@ -15,15 +15,6 @@ const App = () => {
       <BrowserRouter>
       <Navbar />
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/reset" element={<PasswordReset />} />
-
-          <Route path="/home/:userId" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="add-listings" element={<AddListing />}  />
-            <Route path="view-listings" element={<ViewListings />} />
-          </Route>
 
         </Routes>
       </BrowserRouter>
