@@ -55,3 +55,11 @@ const getAllListings = async (req, res) => {
     console.log(error);
   }
 };
+const getListingById = async (req, res) => {
+  try {
+    const data = await Listings.findById(req.params.id);
+    res.send(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
