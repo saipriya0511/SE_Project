@@ -59,3 +59,40 @@ const sendOTPEmail = async (req, res) => {
         return res.status(500).json({ error: "An error occurred while processing the request" });
     }
 };
+
+const updatePassword = async (req, res) => {
+    const { email, otp, newPassword } = req.body;
+
+    if (!email || !otp || !newPassword) {
+        return res.status(200).json({ allFieldsRequired: "Email, OTP, and new password are required" });
+    }
+
+    try {
+        const user = await UserDetails.findOne({ email: email });
+
+        if (!user) {
+            return res.status(200).json({ userNotExist: "User not found" });
+        }
+
+        const isOtpValid = await bcrypt.compare(otp.toString(), user.otp);
+
+        if (!isOtpValid) {
+            return res.status(200).json({ otpNotValid: "Invalid OTP" });
+        }
+
+        const now = new Date();
+        if (user.otpExpiresAt < now) {
+            return res.status(200).json({ otpExpired: "OTP has expired" });
+        }
+
+        user.password = newPassword;
+        user.otp = undefined;
+        user.otpExpiresAt = undefined;
+
+        await user.save();
+
+        return res.status(200).json({ updatedPassword: "Password updated successfully" });
+    } catch (error) {
+        return res.status(500).json({ error: "An error occurred while updating the password" });
+    }
+};
