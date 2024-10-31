@@ -1,38 +1,63 @@
 const mongoose = require("mongoose");
 
+
+
 const ListingSchema = new mongoose.Schema(
   {
     community: {
       type: String,
-      required: true,
+      
     },
     location: {
-      type: String,
-      required: true,
+      type: [
+        {
+          placeId: {
+            type: String,
+            
+          },
+          placeDescription: {
+            type: String,
+            
+          },
+          lat: {
+            type: Number,
+            
+          },
+          long: {
+            type: Number,
+            
+          },
+        },
+      ],
+      
     },
     roomsCount: {
       type: Number,
-      required: true,
+      
     },
     houseArea: {
       type: String,
-      required: true,
+      
     },
     houseWidth: {
       type: String,
-      required: true,
+      
     },
-    BathRoomCount: {
+    bathroomCount: {  
       type: Number,
-      required: true,
+      
     },
     lookingForCount: {
       type: Number,
-      required: true,
+      
     },
     description: {
       type: String,
-      required: true,
+      
+    },
+    distance: {
+      type: Number,
+      
     },
   },
   { timestamps: true }
