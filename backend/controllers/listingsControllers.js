@@ -92,3 +92,51 @@ const getListingById = async (req, res) => {
     console.log(error);
   }
 };
+
+
+const getPlaceDetails = async (req, res) => {
+  try {
+      const { input, location, radius } = req.body;
+
+      const autocompleteResponse = await axios.get(
+          `https://maps.googleapis.com/maps/api/place/autocomplete/json`,
+          {
+              params: {
+                  input,
+                  key: process.env.GOOGLE_MAPS_API_KEY,
+                  ...(location && {
+                      location: `${location.lat},${location.lng}`,
+                  }),
+                  ...(radius && { radius }),
+                  types: "establishment",
+              },
+          }
+      );
+
+      const placeDetails = await Promise.all(
+          autocompleteResponse.data.predictions.map(async (prediction) => {
+              const detailsResponse = await axios.get(
+                  `https://maps.googleapis.com/maps/api/place/details/json`,
+                  {
+                      params: {
+                          place_id: prediction.place_id,
+                          key: process.env.GOOGLE_MAPS_API_KEY,
+                      },
+                  }
+              );
+
+              const { result } = detailsResponse.data;
+              return {
+                  description: prediction.description,
+                  location: result.geometry.location,
+                  place_id: prediction.place_id,
+              };
+          })
+      );
+
+      res.json(placeDetails);
+  } catch (error) {
+      console.error(error);
+      res.status(500).send("Error fetching data");
+  }
+};
