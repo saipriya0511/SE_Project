@@ -142,6 +142,33 @@ const getPlaceDetails = async (req, res) => {
         res.status(500).send("Error fetching data");
     }
 };
+const addHouseSearchHistory = async (req, res) => {
+    try {
+        const { userId, roomsCount, bathroomCount, lookingForCount, distance, price } = req.body;
+        const user = await UserDetails.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: "User does not exist" });
+        }
+
+        // Directly update the houseSearchHistory object
+        user.houseSearchHistory = {
+            roomsCount,
+            bathroomCount,
+            lookingForCount,
+            distance,
+            price
+        };
+
+        await user.save();
+        console.log("Searched history updated successfully");
+        
+        return res.status(200).json({ searchedHistory: "Searched history updated successfully" });
+    } catch (error) {
+        console.error("Error adding search history:", error);
+        res.status(500).json({ error: "Error adding search history" });
+    }
+};
 
 module.exports = {
     addListing,
