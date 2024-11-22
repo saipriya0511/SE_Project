@@ -1,22 +1,84 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../axios";
 import Styles from "./viewCommunities.module.css";
+import { ToastContainer, toast } from "react-toastify";
+import {FaStar} from "react-icons/fa";
 
 const ViewCommunities = () => {
     const [listings, setListings] = useState([]);
+    const [searchedListings, setSearchedListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchClicked, setSearchClicked] = useState(false);
     const [searchDistance, setSearchDistance] = useState("");
     const [roomCount, setRoomCount] = useState("");
     const [bathroomCount, setBathroomCount] = useState("");
     const [lookingForCount, setLookingForCount] = useState("");
     const [priceRange, setPriceRange] = useState("");
 
+    const [rating, setRating] = useState(0);
+    const [feedback, setFeedback] = useState("");
+
+    const [ratedListing, setRatedListing] = useState(false);
+
+    const emojiReactions = ["😡", "😕", "😐", "😊", "😁"];
+
+    const handleReview = async (listingId) => {
+        toast.dismiss();
+        console.log(listingId);
+        try {
+            const listing = listings.find(
+                (listing) => listing._id === listingId
+            );
+            if (!listing) {
+                console.log("Listing not found");
+                return;
+            }
+            
+            if(listing.reviews.some((review) => review.userId.toString() === localStorage.getItem("userId"))){
+                return alert("You have already reviewed this listing");
+            }
+
+            if (rating <= 0 || rating > 5) {
+                toast.error("Please rate between 1 to 5");
+                return;
+            }
+            if (feedback === "") {
+                return toast.error("Please enter a feedback");
+            }
+            const res = await axios.post(`/add-review/${listingId}`, {
+                userId: localStorage.getItem("userId"),
+                rating: rating[listingId],
+                feedback: feedback[listingId]
+            });
+            if (res.data.reviewMsg) {
+                alert(res.data.reviewMsg);
+            }
+            console.log(res.data);
+
+            window.location.reload();
+            setRating(0);
+            setFeedback("");
+        } catch (err) {
+            console.log(err);
+        }
+
+        console.log("Rating:", rating);
+        console.log("Feedback:", feedback);
+        console.log("Listing ID:", listingId);
+    };
+
+    const renderStars = (listingId, index) => {
+        setRating((prevRatings) => ({
+            ...prevRatings,
+            [listingId]: index + 1,
+        }));
+    };
+
     useEffect(() => {
         const fetchListings = async () => {
             try {
                 const response = await axios.get("/all-communities");
-                console.log(response.data);
                 setListings(response.data);
             } catch (err) {
                 console.error("Error fetching listings", err);
@@ -29,54 +91,53 @@ const ViewCommunities = () => {
         fetchListings();
     }, []);
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+    const handleSearch = async () => {
+        try {
+            const response = await axios.get("/all-communities/search", {
+                params: {
+                    roomsCount: roomCount,
+                    bathroomCount: bathroomCount,
+                    lookingForCount: lookingForCount,
+                    distance: searchDistance,
+                    price: priceRange,
+                },
+            });
 
-    if (error) {
-        return <div>{error}</div>;
-    }
+            if (response.data) {
+                setSearchedListings(response.data.searchedListings);
+                setSearchClicked(true);
+                console.log(response.data);
+                if (response.data.searchedListings) {
+                    const res = await axios.post("/listings-search-history", {
+                        userId: localStorage.getItem("userId"),
+                        roomsCount: roomCount,
+                        bathroomCount: bathroomCount,
+                        lookingForCount: lookingForCount,
+                        distance: searchDistance,
+                        price: priceRange,
+                    });
 
-    const filteredListings = listings.filter((listing) => {
-        const matchesDistance =
-            searchDistance === "" ||
-            (searchDistance === "5" && listing.distance <= 5) ||
-            (searchDistance === "10" && listing.distance <= 10) ||
-            (searchDistance === "15" && listing.distance <= 15);
-        const matchesRoomCount =
-            roomCount === "" ||
-            (roomCount === "more than 5"
-                ? listing.roomsCount > 5
-                : listing.roomsCount === parseInt(roomCount));
-        const matchesBathroomCount =
-            bathroomCount === "" ||
-            (bathroomCount === "more than 5"
-                ? listing.bathroomCount > 5
-                : listing.bathroomCount === parseInt(bathroomCount));
-        const matchesLookingForCount =
-            lookingForCount === "" ||
-            (lookingForCount === "more than 5"
-                ? listing.lookingForCount > 5
-                : listing.lookingForCount === parseInt(lookingForCount));
-        const matchesPriceRange =
-            priceRange === "" || listing.price <= parseInt(priceRange);
+                    console.log(res.data);
+                }
+            }
+        } catch (err) {
+            console.error("Error fetching searched listings", err);
+            setError("No listings Found");
+        }
+    };
 
-        return (
-            matchesDistance &&
-            matchesRoomCount &&
-            matchesBathroomCount &&
-            matchesLookingForCount &&
-            matchesPriceRange
-        );
-    });
+    const listingsToDisplay = searchClicked ? searchedListings : listings;
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
 
     return (
         <div className={Styles.container}>
             <div className={Styles.header}>
-                <h2 className={Styles.title}>View Communities</h2>
+                <h2 className={Styles.title}>
+                    {searchClicked ? "Searched Listings" : "Listings"}
+                </h2>
             </div>
-            
-
             <div className={Styles.filters}>
                 <div className={Styles.selectContainer}>
                     <label></label>
@@ -92,7 +153,6 @@ const ViewCommunities = () => {
                     </select>
                 </div>
 
-                {/* Other Filters */}
                 <div className={Styles.selectContainer}>
                     <label> </label>
                     <select
@@ -159,17 +219,17 @@ const ViewCommunities = () => {
                         ))}
                     </select>
                 </div>
+                <button onClick={handleSearch}>Search</button>
             </div>
-            {filteredListings.length === 0 ? (
-                <p className={Styles.noListings}>No listings found</p>
-            ) : (
+
+            {listingsToDisplay && listingsToDisplay.length > 0 ? (
                 <ul className={Styles.list}>
-                    {filteredListings.map((listing) => (
+                    {listingsToDisplay.map((listing) => (
                         <div key={listing._id} className={Styles.listItem}>
                             <h3 className={Styles.listItemTitle}>
-                                {listing?.community} 
+                                {listing?.community}
                             </h3>
-                            <img 
+                            <img
                                 className={Styles.listItemImage}
                                 src={listing?.houseImage}
                                 alt={listing?.community}
@@ -207,12 +267,48 @@ const ViewCommunities = () => {
                             </p>
                             <p className={Styles.listItemDetails}>
                                 <strong>Distance from UNT:</strong>{" "}
-                                {(listing?.distance * 0.621371).toFixed(2)} miles
-                                </p>
-                        </div> 
+                                {(listing?.distance * 0.621371).toFixed(2)}{" "}
+                                miles
+                            </p>
+
+                            <div className={Styles.reviewContainer}>
+                                <h3 className={Styles.reviewTitle}>Review Here</h3>
+                            <div className={Styles.starContainer}>
+                            {[...Array(5)].map((_, index) => (
+                                        <FaStar
+                                            key={index}
+                                            size={20}
+                                            color={index < (rating[listing._id] || 0) ? "#ffc107" : "#e4e5e9"}
+                                            onClick={() => renderStars(listing._id, index)}
+                                            style={{ cursor: "pointer" }}
+                                        />
+                                    ))}
+                                {rating[listing._id] ? emojiReactions[rating[listing._id] - 1] : rating[listing._id]}
+                                </div>
+                                <textarea
+                                    placeholder="Feedback"
+                                    value={feedback[listing._id] || ""}
+                                    onChange={(e) =>
+                                        setFeedback((prevFeedbacks) => ({
+                                            ...prevFeedbacks,
+                                            [listing._id]: e.target.value,
+                                        }))
+                                    }
+                                />
+                                <button
+                                    className={Styles.reviewButton}
+                                    onClick={() => handleReview(listing._id)}
+                                >
+                                    Rate
+                                </button>
+                            </div>
+                        </div>
                     ))}
                 </ul>
+            ) : (
+                <p className={Styles.noListings}>No listings found</p>
             )}
+            <ToastContainer autoClose={3000} position="top-center" />
         </div>
     );
 };
