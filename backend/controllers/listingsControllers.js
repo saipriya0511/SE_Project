@@ -170,6 +170,70 @@ const addHouseSearchHistory = async (req, res) => {
     }
 };
 
+const nodemailer = require("nodemailer");
+
+const sendMatchedListingsEmail = async (req, res) => {
+    try {
+        const users = await UserDetails.find(); // Get all users
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASSWORD,
+            },
+        });
+
+        for (const user of users) {
+            if (!user.houseSearchHistory || (user.houseSearchHistory.roomsCount === "" && 
+                user.houseSearchHistory.bathroomCount === "" && user.houseSearchHistory.lookingForCount === "" && 
+                user.houseSearchHistory.distance === "" && user.houseSearchHistory.price === "")) continue; 
+
+            const { roomsCount, bathroomCount, lookingForCount, distance, price } = user.houseSearchHistory;
+
+
+            const query = {};
+
+            if (roomsCount) query.roomsCount = roomsCount === "more than 5" ? { $gt: "5" } : roomsCount;
+            if (bathroomCount) query.bathroomCount = bathroomCount === "more than 5" ? { $gt: "5" } : bathroomCount;
+            if (lookingForCount) query.lookingForCount = lookingForCount === "more than 5" ? { $gt: "5" } : lookingForCount;
+            if (distance) query.distance = { $lte: distance };
+            if (price) query.price = { $lte: price };
+
+            const matchedListings = await Listings.find(query);
+
+
+            const isEmpty = (obj) => Object.keys(obj).length === 0;
+
+            
+
+            if (matchedListings.length > 0 ) {
+                console.log("Sending email for user:", user.email, query);
+                const mailOptions = {
+                    from: process.env.EMAIL_USER,
+                    to: user.email,
+                    subject: "Matched Listings Based on Your Search History",
+                    text: `We found some listings that match your search criteria:\n\n${matchedListings
+                        .map(
+                            (listing) =>
+                                `Community: ${listing.community}\nPrice: ${listing.price}\nRooms: ${listing.roomsCount}\n\n`
+                        )
+                        .join("")}`,
+                };
+
+                // Send the email to the current user
+                await transporter.sendMail(mailOptions);
+            }
+        }
+        console.log("Emails sent with matched listings for each user.");
+
+        return res.status(200).json({ message: "Emails sent with matched listings for each user." });
+    } catch (error) {
+        console.error("Error checking for matched listings:", error);
+        res.status(500).json({ error: "Error checking for matched listings" });
+    }
+};
+
 module.exports = {
     addListing,
     getAllListings,
