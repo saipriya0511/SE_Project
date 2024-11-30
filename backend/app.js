@@ -19,6 +19,9 @@ app.use("/api", OtpRouter);
 const ListingsRoutes = require("./Routes/ListingsRoutes");
 app.use("/api", ListingsRoutes);
 
+const communityRoutes = require("./Routes/communitiesRoutes");
+app.use("/api", communityRoutes);
+
 const port = process.env.PORT || 3000;
 
 
