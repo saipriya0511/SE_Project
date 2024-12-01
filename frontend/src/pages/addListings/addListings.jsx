@@ -18,7 +18,10 @@ const AddListing = () => {
         lon: -97.1525862,
     };
 
+    const userId = localStorage.getItem("userId");
+
     const [formData, setFormData] = useState({
+        userId: userId,
         community: "",
         houseImage: null,
         location: "",
@@ -201,3 +204,114 @@ const AddListing = () => {
                             {suggestions.map((suggestion, index) => (
                                 <li
                                     key={index}
+                                    className={Styles.suggestionItem}
+                                    onClick={() => handleSuggestionClick(suggestion)}
+                                >
+                                    {suggestion.description}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+
+                {distanceFromUNT && (
+                    <div className={Styles.distanceInfo}>
+                        Distance from UNT: {distanceFromUNT.toFixed(2)} miles
+                    </div>
+                )}
+
+                <div className={Styles.formGroup}>
+                    <label className={Styles.label}>House Area:</label>
+                    <input
+                        type="number"
+                        name="houseArea"
+                        value={formData.houseArea}
+                        onChange={handleInputChange}
+                        className={Styles.input}
+                        min="0"
+                    />
+                </div>
+
+                <div className={Styles.formGroup}>
+                    <label className={Styles.label}>House Width:</label>
+                    <input
+                        type="number"
+                        name="houseWidth"
+                        value={formData.houseWidth}
+                        onChange={handleInputChange}
+                        className={Styles.input}
+                        min="0"
+                    />
+                </div>
+
+                <div className={Styles.formGroup}>
+                    <label className={Styles.label}>Bathroom Count:</label>
+                    <input
+                        type="number"
+                        name="bathroomCount"
+                        value={formData.bathroomCount}
+                        onChange={handleInputChange}
+                        className={Styles.input}
+                        min="0"
+                    />
+                </div>
+
+                <div className={Styles.formGroup}>
+                    <label className={Styles.label}>Looking For Count:</label>
+                    <input
+                        type="number"
+                        name="lookingForCount"
+                        value={formData.lookingForCount}
+                        onChange={handleInputChange}
+                        className={Styles.input}
+                        min="0"
+                    />
+                </div>
+
+                <div className={Styles.formGroup}>
+                    <label className={Styles.label}>Rooms Count:</label>
+                    <input
+                        type="number"
+                        name="roomsCount"
+                        value={formData.roomsCount}
+                        onChange={handleInputChange}
+                        className={Styles.input}
+                        min="1"
+                    />
+                </div>
+
+                <div className={Styles.formGroup}>
+                    <label className={Styles.label}>Price in $:</label>
+                    <input
+                        type="number"
+                        name="price"
+                        value={formData.price}
+                        onChange={handleInputChange}
+                        className={Styles.input}
+                        min="1"
+                    />
+                </div>
+
+                <div className={Styles.formGroup}>
+                    <label className={Styles.label}>Description:</label>
+                    <textarea
+                        rows="4"
+                        type="text"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        className={Styles.input}
+                    />
+                </div>
+
+                <button onClick={handleSubmit} className={Styles.submitButton}>
+                    Add Listing
+                </button>
+            </form>
+
+            <ToastContainer />
+        </div>
+    );
+};
+
+export default AddListing;

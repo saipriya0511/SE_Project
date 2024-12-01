@@ -35,7 +35,7 @@ const Signup = () => {
 
         localStorage.setItem("userId", userId);
         setTimeout(() => {
-          navigate(`/home/${userId}/add-listings`);
+          navigate(`/home`);
         }, 1000);
       }
     } catch (error) {
@@ -51,7 +51,7 @@ const Signup = () => {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.formContainer}>
-        <h2>Signup</h2>
+        <h2 className={styles.title}>Signup</h2>
 
         <div className={styles.inputContainer}>
           <i className={`fas fa-user ${styles.icon}`}></i>
@@ -77,7 +77,7 @@ const Signup = () => {
           />
         </div>
 
-        <div className={styles.inputContainer}>
+        <div className={styles.inputContainer2}>
           <i className={`fas fa-lock ${styles.icon}`}></i>
           <input
             autoComplete="off"
@@ -96,15 +96,17 @@ const Signup = () => {
           ></i>
         </div>
 
-        <button type="submit" className={styles.button}>
-          Submit
-        </button>
-        <p className={styles.text}>
-          Already have an account?{" "}
-          <Link to="/" className={styles.link}>
-            Login
-          </Link>
-        </p>
+        <div className={styles.buttonContainer}>
+          <button type="submit" className={styles.submitButton}>
+            Submit
+          </button>
+
+          <button className={styles.loginButton}>
+            <Link to="/" className={styles.llink}>
+              Login
+            </Link>
+          </button>
+        </div>
       </form>
 
       {/* Toast Container for notifications */}

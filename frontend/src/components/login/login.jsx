@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css"; // Import CSS for toast notifica
 import styles from "./Login.module.css";
 import "@fortawesome/fontawesome-free/css/all.min.css"; // Import Font Awesome CSS
 
-
 const Login = () => {
   const [login, setLogin] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
@@ -18,22 +17,30 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const res = await axios.post("/login", { ...login });
-  
+
       if (res.data.EnterAllDetails) {
-        toast.error( "Please enter all details."); // Show error toast with a specific icon
+        toast.error("Please enter all details."); // Show error toast with a specific icon
       } else if (res.data.NotExist) {
-        toast.error(<><i className="fas fa-user-times"></i> {res.data.NotExist}</>); // Show error toast with a specific icon
+        toast.error(
+          <>
+            <i className="fas fa-user-times"></i> {res.data.NotExist}
+          </>
+        ); // Show error toast with a specific icon
       } else if (res.data.Incorrect) {
-        toast.error(<><i className="fas fa-lock"></i> {res.data.Incorrect}</>); // Show error toast with a specific icon
+        toast.error(
+          <>
+            <i className="fas fa-lock"></i> {res.data.Incorrect}
+          </>
+        ); // Show error toast with a specific icon
       } else {
         const userId = res.data._id;
         localStorage.setItem("userId", userId);
         toast.success("Login successful!"); // Show success toast with a specific icon
         setTimeout(() => {
-          navigate(`/home/${userId}/add-listings`);
+          navigate(`/home`);
         }, 1000);
       }
     } catch (error) {
@@ -41,7 +48,6 @@ const Login = () => {
       toast.error("An error occurred. Please try again."); // Show error toast with a specific icon
     }
   };
-  
 
   // Function to toggle password visibility
   const togglePasswordVisibility = () => {
@@ -70,20 +76,25 @@ const Login = () => {
 
         <div className={styles.inputContainer2}>
           <i className={`fas fa-lock ${styles.icon}`}></i> {/* Lock Icon */}
-          <input autoComplete="off"
-            type={showPassword ? "text"  : "password"} // Toggle between text and password types
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-            value={login.password}
-            className={styles.input}
-          />
-          <span className={styles.underline}></span>
-          {/* Eye Icon for showing/hiding password */}
-          <i
-            className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"} ${styles.eyeIcon}`}
-            onClick={togglePasswordVisibility}
-          ></i>
+          <div>
+            <input
+              autoComplete="off"
+              type={showPassword ? "text" : "password"} // Toggle between text and password types
+              name="password"
+              placeholder="Password"
+              onChange={handleChange}
+              value={login.password}
+              className={styles.input}
+            />
+            <span className={styles.underline}></span>
+            {/* Eye Icon for showing/hiding password */}
+            <i
+              className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"} ${
+                styles.eyeIcon
+              }`}
+              onClick={togglePasswordVisibility}
+            ></i>
+          </div>
         </div>
 
         <p className={styles.resetPassword}>
@@ -92,16 +103,18 @@ const Login = () => {
           </Link>
         </p>
 
-        <button type="submit" className={styles.button}>
-          Login
-        </button>
+        <div className={styles.buttonContainer}>
+          <button type="submit" className={styles.loginButton}>
+            Login
+          </button>
 
-        <p className={styles.text}>
-          Don't have an account?{" "}
-          <Link to="/signup" className={styles.link}>
-            Sign up
-          </Link>
-        </p>
+          <button className={styles.signupButton}>
+            <Link to="/signup" className={styles.slink} >
+              Sign up
+            </Link>
+          </button>
+        </div>
+
       </form>
 
       <ToastContainer

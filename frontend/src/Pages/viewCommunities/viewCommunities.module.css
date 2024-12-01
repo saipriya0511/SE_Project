@@ -1,0 +1,231 @@
+/* ViewListings.module.css */
+.container {
+    max-width: 1200px;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 0px 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header {
+    margin: 0px auto;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    height: 0px;
+    text-align: center;
+  }
+  
+  .noListings{
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    color: #3498db;
+    margin-top: 3%;
+  }
+  
+  .search {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    width: 220px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .search:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+  
+ 
+  
+  .list h3{
+    margin: 0px;
+    margin-bottom: 5px;
+  }
+  
+  .list p{
+    margin: 0px;
+  }
+  
+  .listItem {
+    background-color: #fff;
+    padding: 7px 7px;
+    border-radius: 2px;
+    margin: 0px 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  .listItemTitle {
+    font-size: 13px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  .listItemDetails {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .listItemDetails strong {
+    color: #333;
+  }
+  
+  .listItemDetails:not(:last-child) {
+    margin-bottom: 0px;
+  }
+  
+  .filters{
+    display: flex;
+    justify-content: flex-start;
+    column-gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 3%;
+    align-items: center;
+  }
+  
+  .filters button{
+    padding: 5px 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .selectContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .listItemImage{
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 0px;
+  }
+  
+  .selectContainer label{
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  
+  
+  .select{
+    padding: 5px 10px;
+    font-size: 13px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    width: 180px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .select:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .title {
+      font-size: 16px;
+    }
+  
+    .search {
+      width: 200px;
+    }
+  }
+
+  
+.listContainer{
+  display: flex;
+  gap: 10px;
+}
+
+.list {
+  list-style: none;
+  width: 60%;
+  overflow-y: auto;
+  max-height: 400px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mapContainer{
+  border: #2c3e50 solid 1px;
+  width: 40%;
+  height: full;
+}
+
+.listItemDetailsDiv{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.listItemTitleDiv1{
+  display: flex;
+  flex-direction: column;
+  width:30%;
+}
+
+.listItemDetailsP{
+  margin: 0px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #2c3e50;
+  margin-right: 0px;
+  background-color: #3498db ;
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 0px 5px;
+}
+
+
+.listItemDetails0{
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+}
+
+.listItemDetailsDiv2{
+  display: flex;
+  flex-direction: column;
+}
+
+.listItemDetailsDiv2 p{
+  font-size: 11px;
+  margin: 0px;
+  width: 100%;
+}
+
+.viewButton{
+  font-size: 13px;
+  cursor: pointer;
+  margin: 0px;
+  height: 0px;
+  margin-top: 5px;
+  color: blue;
+}

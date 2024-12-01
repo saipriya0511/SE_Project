@@ -8,5 +8,4 @@ router.post("/send-otp", sendOTPEmail);
 router.post("/update-password", updatePassword);
 
 
- 
 module.exports = router;
