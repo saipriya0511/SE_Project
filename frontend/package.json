@@ -21,10 +21,11 @@
   },
   "proxy": "https://api.olamaps.io",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+     "deploy": "pm2 start npm --name 'frontend' -- start"
   },
   "eslintConfig": {
     "extends": [
