@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon index.js",
-    "deploy":"pm2 start --name 'backend' index.js"
+        "start": "npx nodemon index.js",
+        "deploy":"pm2 start --name 'backend' index.js"
   },
   "keywords": [],
   "author": "",
