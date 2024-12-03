@@ -57,7 +57,7 @@ const Login = () => {
   return (
     <div className={styles.container}>
       <form className={styles.formContainer} onSubmit={handleSubmit}>
-        <h2 className={styles.title}>Login!!</h2>
+        <h2 className={styles.title}>Login</h2>
 
         <div className={styles.inputContainer1}>
           <i className={`fas fa-envelope ${styles.icon}`}></i>{" "}
