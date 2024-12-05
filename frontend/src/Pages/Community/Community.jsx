@@ -80,7 +80,7 @@ const Community = () => {
             <p><strong>Price:</strong> {community.price}</p>
             <p><strong>Rooms:</strong> {community.roomsCount}</p>
             <p><strong>Bathrooms:</strong> {community.bathroomCount}</p>
-            <p><strong>Looking for:</strong> {community.lookingForCount}</p>
+{/*             <p><strong>Looking for:</strong> {community.lookingForCount}</p> */}
             <p><strong>Width:</strong> {community.houseWidth}</p>
             <p><strong>Area:</strong> {community.houseArea}</p>
             <p><strong>Distance from UNT:</strong>{" "}
