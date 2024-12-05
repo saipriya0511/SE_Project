@@ -10,7 +10,7 @@ const Home = () => {
     return (
         <div className={Styles.container}>
             <div className={Styles.home}>
-                <h1 className={Styles.heading}>Welcome to Our Community</h1>
+                <h1 className={Styles.heading}>House hunt</h1>
                 <p className={Styles.subHeading}>Find your ideal place or roommate with ease!</p>
                 <button
                     className={`${Styles.button} ${Styles.searchButton}`}
